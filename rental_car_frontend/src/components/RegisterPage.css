@@ -1,0 +1,130 @@
+.register-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  font-family: "Segoe UI", sans-serif;
+}
+
+
+.message{
+  color: #008000;
+  text-align: center;
+  background :linear-gradient(to right, #729b68,#02f812)
+ 
+}
+
+
+.register-box {
+  background-color: #ffffff;
+  padding: 40px 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-box h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.register-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-box label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.register-box input {
+  margin-bottom: 18px;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.register-btn {
+  padding: 12px;
+  font-size: 16px;
+  background-color: #0077ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: #005edb;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: #0077ff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.password-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle input {
+  flex: 1;
+}
+
+.toggle-btn {
+  margin-left: 10px;
+  padding: 6px 10px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.toggle-btn:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 35%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+

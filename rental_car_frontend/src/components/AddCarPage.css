@@ -1,0 +1,43 @@
+.add-car-container {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.car-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.car-form label {
+  font-weight: 600;
+}
+
+.car-form input,
+.car-form select,
+.car-form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.preview-img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.add-button {
+  padding: 10px;
+  background: linear-gradient(to right, #3a86ff, #8338ec);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}

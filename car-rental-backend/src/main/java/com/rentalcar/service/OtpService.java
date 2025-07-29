@@ -1,21 +1,40 @@
-//package com.rentalcar.service;
-//
-//import java.util.Map;
-//import java.util.Optional;
-//import java.util.Random;
-//import java.util.concurrent.ConcurrentHashMap;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import com.rentalcar.Entity.User;
-//import com.rentalcar.repository.UserRepository;
-//
-//@Service
-//public class OtpService {
-//
+package com.rentalcar.service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OtpService {
+
+	
+	   private final Map<String, String> otpStorage = new HashMap<>();
+
+	    @Autowired
+	    private JavaMailSender mailSender;
+
+	    public void generateAndSendOtp(String email) {
+	        String otp = String.format("%06d", new Random().nextInt(999999));
+	        otpStorage.put(email, otp);
+
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(email);
+	        message.setSubject("OTP for Password Reset");
+	        message.setText("Your OTP is: " + otp);
+
+	        mailSender.send(message);
+	    }
+
+	    public boolean verifyOtp(String email, String otp) {
+	        return otp.equals(otpStorage.get(email));
+	    }
 //    private final Map<String, String> otpStore = new ConcurrentHashMap<>();
-//
+
 //    @Autowired
 //    private UserRepository userRepository;
 //
@@ -46,5 +65,5 @@
 //        }
 //        return false;
 //    }
-//
-//}
+
+}

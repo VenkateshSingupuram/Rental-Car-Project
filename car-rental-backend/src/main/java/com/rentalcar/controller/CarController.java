@@ -33,37 +33,38 @@ public class CarController {
     private static final String UPLOAD_DIR = "uploads/";
 
     @PostMapping("/add")
-    public ResponseEntity<String> addCar(
-            @RequestParam("brand") String brand,
-            @RequestParam("fuelType") String fuelType,
-            @RequestParam("transmission") String transmission,
-            @RequestParam("pricePerDay") double pricePerDay,
-            @RequestParam("description") String description,
-            @RequestParam("image") MultipartFile imageFile
-    ) {
-        try {
-            // 1. Save image to server
-            String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, imageFile.getBytes());
+    public ResponseEntity<?> addCar(@RequestParam("brand") String brand,
+                                    @RequestParam("fuelType") String fuelType,
+                                    @RequestParam("transmission") String transmission,
+                                    @RequestParam("pricePerDay") double pricePerDay,
+                                    @RequestParam("description") String description,
+                                    @RequestParam("image") MultipartFile imageFile) {
 
-            // 2. Create and save Car
+        try {
+            // Save image
+            String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+            Path path = Paths.get("uploads", fileName);
+            Files.write(path, imageFile.getBytes());
+
+          
             Car car = new Car();
             car.setBrand(brand);
             car.setFuelType(fuelType);
             car.setTransmission(transmission);
             car.setPricePerDay(pricePerDay);
             car.setDescription(description);
-            car.setImagePath("uploads/"+ fileName); // Save relative path
+
+           car.setImagePath("uploads/" + fileName);  // This field should exist in your Car entity
 
             carRepository.save(car);
-            return ResponseEntity.ok("Car added successfully");
+            return ResponseEntity.ok("Car added successfully!");
+
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while saving car");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving car");
         }
     }
+
+
 
     @GetMapping("/carRetrieve")
     public ResponseEntity<List<Car>> getAllCars() {

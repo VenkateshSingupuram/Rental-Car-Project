@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserRepository userRepo;
-    private final PasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<?> registerUser(RegisterRequest req) {
         if (userRepo.findByEmail(req.getEmail()).isPresent()) {
@@ -29,8 +29,10 @@ public class UserService {
         User user = new User();
         user.setName(req.getName());
         user.setEmail(req.getEmail());
-        user.setPassword(encoder.encode(req.getPassword()));
-        user.setRole("USER");
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
+       user.setRole("USER");
+      //  user.setRole(req.getRole());
+
         userRepo.save(user);
 
         return ResponseEntity.ok("User registered successfully");
@@ -41,17 +43,32 @@ public class UserService {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (encoder.matches(req.getPassword(), user.getPassword())) {
+            if (passwordEncoder.matches(req.getPassword(), user.getPassword())) {
                 LoginResponse response = new LoginResponse(
                     user.getId(),
                     user.getName(),
                     user.getEmail(),
                     user.getRole()
                 );
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(response);  // It is return DTO not a Entity 
             }
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    }
+    
+    public boolean isEmailRegistered(String email) {
+        return userRepo.findByEmail(email).isPresent();
+    }
+    
+    public void updatePassword(String email, String rawPassword) {
+        Optional<User> optionalUser = userRepo.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(passwordEncoder.encode(rawPassword));
+            userRepo.save(user);
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 }

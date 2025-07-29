@@ -21,7 +21,7 @@ public class Car {
 
     @Column(length = 1000)
     private String description;
-
+    @Column(name = "image_path")
     private String imagePath;  // Stores image file path like uploads/car1.jpg
 
 	public Long getId() {

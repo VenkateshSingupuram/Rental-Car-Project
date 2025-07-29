@@ -28,32 +28,41 @@ function AddCarPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const formData = new FormData();
-      formData.append('brand', carData.brand);
-      formData.append('fuelType', carData.fuelType);
-      formData.append('transmission', carData.transmission);
-      formData.append('pricePerDay', carData.pricePerDay);
-      formData.append('description', carData.description);
-      formData.append('image', carData.imageFile); 
+  try {
+    const formData = new FormData();
+    formData.append('brand', carData.brand);
+    formData.append('fuelType', carData.fuelType);
+    formData.append('transmission', carData.transmission);
+    formData.append('pricePerDay', carData.pricePerDay);
+    formData.append('description', carData.description);
+    formData.append('image', carData.imageFile);
 
-      await axios.post('http://localhost:8080/api/cars/add', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+    const token = localStorage.getItem("token"); // ✅ Retrieve token
 
-      alert("Car added successfully!");
-      navigate("/HomepageAdmin");
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
 
-    } catch (error) {
-      console.error("Error adding car:", error);
-      alert("Failed to add car.");
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; // ✅ Only add if available
     }
-  };
+
+    await axios.post("http://localhost:8080/api/cars/add", formData, {
+      headers: headers
+    });
+
+    alert("Car added successfully!");
+    navigate("/HomepageAdmin");
+
+  } catch (error) {
+    console.error("Error adding car:", error);
+    alert("Failed to add car.");
+  }
+};
+
 
   return (
     <div className="add-car-container">

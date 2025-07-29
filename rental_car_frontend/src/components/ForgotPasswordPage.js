@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ForgotPasswordPage.css";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const BASE_URL = "http://localhost:8080/api/auth";
 
@@ -9,30 +10,61 @@ function ForgotPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
+ const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  const handleSendOtp = (e) => {
+ const handleSendOtp = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
+        setError("Passwords do not match");
+        return;
     }
 
-    setError("");
-    setOtpSent(true);
+    if (password.length < 6) { // Example password criteria
+        setError("Password  be at least 6 characters long");
+        return;
+    }
 
-    // TODO: Call backend API to send OTP to email
-    console.log("Send OTP to email:", email);
-  };
+    try {
+        const response = await axios.post(
+            `${BASE_URL}/send-otp`,
+            { email },
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true
+            }
+        );
 
-  const handleVerifyOtp = (e) => {
+        setOtpSent(true);
+        setError("");
+        setSuccess(response.data); // Use the response message
+    } catch (err) {
+        setError("Failed to send OTP. Check if the email is registered.");
+        console.error(err);
+    }
+};
+
+const handleVerifyOtp = async (e) => {
     e.preventDefault();
-
-    // TODO: Call backend API to verify OTP and reset password
-    console.log("Verifying OTP:", otp);
-  };
+    try {
+        const response = await axios.post(`${BASE_URL}/reset-password`, {
+            email,
+            newPassword: password,
+            otp,
+        });
+        setSuccess(response.data); // Use the response message
+        setError("");
+        setTimeout(() => navigate("/"), 2000); // Redirect to login
+    } catch (err) {
+        setError("Invalid OTP or error resetting password.");
+        console.error(err);
+    }
+};
 
   return (
     <div className="forgot-password-page">
@@ -81,10 +113,11 @@ function ForgotPasswordPage() {
           )}
 
           {error && <p className="error-message">{error}</p>}
+          {success && <p className="success-message">{success}</p>}
 
           <button type="submit">
             {otpSent ? "Verify & Reset Password" : "Send OTP"}
-          </button>
+          </button> 
         </form>
       </div>
     </div>
@@ -92,15 +125,3 @@ function ForgotPasswordPage() {
 }
 
 export default ForgotPasswordPage;
-
-export const sendOtp = (email) => {
-  return axios.post(`${BASE_URL}/send-otp`, { email });
-};
-
-export const resetPasswordWithOtp = (email, newPassword, otp) => {
-  return axios.post(`${BASE_URL}/reset-password`, {
-    email,
-    newPassword,
-    otp,
-  });
-};

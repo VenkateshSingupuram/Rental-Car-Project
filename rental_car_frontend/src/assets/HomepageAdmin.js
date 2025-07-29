@@ -9,7 +9,7 @@ function HomepageAdmin() {
   const [editingCar, setEditingCar] = useState(null);
   const [updatedData, setUpdatedData] = useState({
     imageUrl: "",
-    model: "",
+    brand: "",
     fuelType: "",
     transmission: "",
     pricePerDay: "",
@@ -38,7 +38,7 @@ function HomepageAdmin() {
     setEditingCar(car);
     setUpdatedData({
       imageUrl: car.imageUrl,
-      model: car.model,
+      brand: car.brand,
       fuelType: car.fuelType,
       transmission: car.transmission,
       pricePerDay: car.pricePerDay,
@@ -99,7 +99,7 @@ function HomepageAdmin() {
 
               </div>
               <div className="car-details">
-                <h2 className="car-model">Model: {car.model}</h2>
+                <h2 className="car-brand"> {car.brand}</h2>
                 <div className="car-specs">
                   <span className="car-spec">{car.transmission}</span>
                   <span className="car-spec">{car.fuelType}</span>
@@ -125,7 +125,7 @@ function HomepageAdmin() {
           <div className="modal-content">
             <h2>Update Car Info</h2>
             <input type="file" name="image" accept="image/*" onChange={handleInputChange} />
-            <input type="text" name="model" value={updatedData.model} onChange={handleInputChange} placeholder="Brand/Model" />
+            <input type="text" name="brand" value={updatedData.brand} onChange={handleInputChange} placeholder="Brand/Model" />
             <select name="fuelType" value={updatedData.fuelType} onChange={handleInputChange}>
               <option>Hybrid</option>
               <option>Petrol</option>

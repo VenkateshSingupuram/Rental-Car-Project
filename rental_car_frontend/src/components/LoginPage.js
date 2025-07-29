@@ -1,23 +1,42 @@
 import React, { useState } from "react";
 import "./LoginPage.css";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
-  const handleLogin = (e) => {
-    
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Dummy credentials check (replace with actual API call later)
-    if (email === "test@example.com" && password === "password") {
-      
-      navigate("/home");
-    } else if(email === "venkysvt2000@gmail.com" && password === "password"){
-      navigate("/HomepageAdmin");
-      console.log("Console Printing");
+    try {
+      const response = await axios.post("http://localhost:8080/api/auth/login", {
+        email,
+        password,
+      });
+
+      const userData = response.data;
+    
+      // Store user for later access
+    localStorage.setItem("user", JSON.stringify(userData));
+    
+    if (userData.role === "ADMIN") {
+        navigate("/HomepageAdmin");
+        } else if (userData.role === "USER") {
+        navigate("/home");
+        } else {
+        alert("Unknown role");
+        }
+
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error.response && error.response.status === 401) {
+        alert("Invalid email or password");
+      } else {
+        alert("Login failed. Please try again.");
+      }
     }
   };
 
